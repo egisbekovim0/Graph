@@ -1,0 +1,50 @@
+import java.io.DataOutput;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
+public class Vertex <V>{
+    private V data;
+    private Map<Vertex<V>, Double> adjacentVertices;
+    private V V;
+
+
+    public Vertex(V data) {
+        this.data = data;
+        adjacentVertices = new HashMap<>();
+    }
+    public void addAdjacentVertex(Vertex<V> dest, Double weight){
+        adjacentVertices.put(dest, weight);
+    }
+
+    public void addVertex(V v) {
+        Vertex<V> vertex;
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Vertex<?> vertex = (Vertex<?>) o;
+        return Objects.equals(data, vertex.data);
+    }
+
+    public Map<Vertex<V>, Double> getAdjacentVertices() {
+        return adjacentVertices;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(data);
+    }
+    public boolean contains(Vertex<V> key){
+        return adjacentVertices.containsKey(key);
+    }
+
+    public Double getWeight(Vertex<V> vVertex) {
+        return null;
+    }
+
+
+
+
+}
