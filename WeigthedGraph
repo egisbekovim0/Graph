@@ -1,0 +1,86 @@
+import java.util.*;
+
+public class WeightedGraph<V> {
+    private final boolean undirected;
+    private Map<V, Vertex<V>> vertices = new HashMap<>();
+
+    public WeightedGraph() {
+        this.undirected = true;
+    }
+
+    public WeightedGraph(boolean undirected) {
+        this.undirected = undirected;
+    }
+
+    public Double getWeight(V source, V dest) {
+        if (!hasVertex(source) || !hasVertex(dest))
+            return null;
+        Vertex<V> sourceVertex = vertices.get(source);
+        Map<Vertex<V>, Double> adjacentVertices = sourceVertex.getAdjacentVertices();
+        if (adjacentVertices.containsKey(vertices.get(dest))) {
+            return adjacentVertices.get(vertices.get(dest));
+        } else {
+            return null;
+        }
+    }
+
+
+    public void addVertex(V v) {
+        if (!hasVertex(v)) {
+            vertices.put(v, new Vertex<>(v));
+        }
+    }
+
+    public void addEdge(V source, V dest, double weight) {
+        if (!hasVertex(source))
+            addVertex(source);
+
+        if (!hasVertex(dest))
+            addVertex(dest);
+
+        if (hasEdge(source, dest) || source.equals(dest))
+            return; // reject parallels & self-loops
+
+        vertices.get(source).addAdjacentVertex(vertices.get(dest), weight);
+
+        if (undirected)
+            vertices.get(dest).addAdjacentVertex(vertices.get(source), weight);
+    }
+
+    public int getVerticesCount() {
+        return vertices.size();
+    }
+
+    public boolean hasVertex(V v) {
+        return vertices.containsKey(v);
+    }
+
+    public boolean hasEdge(V source, V dest) {
+        if (!hasVertex(source))
+            return false;
+        return vertices.get(source).contains(vertices.get(dest));
+    }
+
+    public Iterable<V> adjacencyList(V v) {
+        if (!hasVertex(v))
+            return null;
+
+        List<V> adjacentVertices = new LinkedList<>();
+        Vertex<V> vertex = vertices.get(v);
+
+        for (V adjVertex : vertices.keySet()) {
+            if (!adjVertex.equals(v) && hasEdge(v, adjVertex)) {
+                adjacentVertices.add(adjVertex);
+            }
+        }
+
+        return adjacentVertices;
+    }
+
+    public Iterable<V> getEdges(V v) {
+        if (!hasVertex(v))
+            return null;
+        // Since you don't have an Edge class, you can return the adjacent vertices instead
+        return adjacencyList(v);
+    }
+}
